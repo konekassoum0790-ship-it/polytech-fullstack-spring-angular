@@ -1,0 +1,46 @@
+package org.polytech.films.repository;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.polytech.films.model.Film;
+import org.polytech.films.model.Film.Genre;
+import org.springframework.stereotype.Repository;
+
+@Repository 
+public class FilmRepository {
+
+    //private final FilmService filmService;
+    private Map<Long, Film> MaBaseDeFilms;
+
+    public Map<Long, Film> getMaBaseDeFilms() {
+        return MaBaseDeFilms;
+    }
+
+    
+
+    public void setMaBaseDeFilms(Map<Long, Film> maBaseDeFilms) {
+        MaBaseDeFilms = maBaseDeFilms;
+    }
+
+    public Film RetourneFilmParId(Long id){
+
+        return MaBaseDeFilms.get(id);
+    }
+
+
+
+    //Constructeur
+    public FilmRepository() {
+
+        Film film1 = new Film(1, "Naruto", "Masashi Kishimoto", LocalDate.of(1999, 9, 21), Genre.ACTION);
+        MaBaseDeFilms = new HashMap<>();
+        this.MaBaseDeFilms.put(film1.getId(), film1);
+    }
+
+
+
+    
+    
+}

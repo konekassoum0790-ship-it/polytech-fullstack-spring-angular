@@ -45,5 +45,14 @@ public class Film {
         this.genre = genre;
     }
 
+    //Constructeur avec initialisation
+    public Film(long id, String titre, String realisateur, LocalDate dateSortie, Genre genre) {
+        this.id = id;
+        this.titre = titre;
+        this.realisateur = realisateur;
+        this.dateSortie = dateSortie;
+        this.genre = genre;
+    }
+
     
 }
