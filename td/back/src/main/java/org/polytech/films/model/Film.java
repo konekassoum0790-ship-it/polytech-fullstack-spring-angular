@@ -2,9 +2,12 @@ package org.polytech.films.model;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class Film {
 
     private Long id;
+    @NotBlank
     private String titre;
     private String realisateur;
     private LocalDate dateSortie;

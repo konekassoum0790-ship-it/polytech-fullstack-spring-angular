@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController 
@@ -39,7 +41,7 @@ public class FilmController {
     }
 
     @PostMapping("/films")
-    public ResponseEntity<Film>ajouterUnFilm(@RequestBody Film film){
+    public ResponseEntity<Film>ajouterUnFilm(@Valid @RequestBody Film film){
         Film saved = filmService.ajouterUnFilm(film);
         URI uri = ServletUriComponentsBuilder
             .fromCurrentRequest().path("/{id}")
