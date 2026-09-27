@@ -1,6 +1,8 @@
 package org.polytech.films.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -13,7 +15,8 @@ public class Film {
     private LocalDate dateSortie;
     public enum Genre {ACTION, DRAME, COMEDIE, SCIENCE_FICTION}
     public Genre genre;
-    
+    private List<Commentaire> commentaires = new ArrayList<>();
+
     public Film() {
     }
 
@@ -46,6 +49,12 @@ public class Film {
     }
     public void setGenre(Genre genre) {
         this.genre = genre;
+    }
+    public List<Commentaire> getCommentaires() {
+        return commentaires;
+    }
+    public void setCommentaires(List<Commentaire> commentaires) {
+        this.commentaires = commentaires;
     }
 
     //Constructeur avec initialisation
