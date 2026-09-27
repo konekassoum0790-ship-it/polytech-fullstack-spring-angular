@@ -7,6 +7,7 @@ import org.polytech.films.model.Film;
 import org.polytech.films.service.FilmService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +51,12 @@ public class FilmController {
     @PutMapping("/films/{id}")
     public Film mettreAJourUnFilm(@PathVariable Long id, @RequestBody Film film){
         return filmService.mettreAJourUnFilm(id, film);
+    }
+
+    @DeleteMapping("/films/{id}")
+    public ResponseEntity<Void> supprimerUnFilm(@PathVariable Long id){
+        filmService.supprimerUnFilm(id);
+        return ResponseEntity.noContent().build();
     }
 
 

@@ -55,6 +55,10 @@ public class FilmRepository {
         return film;
     }
 
+    public void supprimerUnFilm(Long id) {
+        MaBaseDeFilms.remove(id);
+    }
+
 
 
     

@@ -39,4 +39,9 @@ public class FilmService {
         RetourneFilmParId(id);
         return filmRepository.mettreAJourUnFilm(id, film);
     }
+
+    public void supprimerUnFilm(Long id) {
+        RetourneFilmParId(id);
+        filmRepository.supprimerUnFilm(id);
+    }
 }
