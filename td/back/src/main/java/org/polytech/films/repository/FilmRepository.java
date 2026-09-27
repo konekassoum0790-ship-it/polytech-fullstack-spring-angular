@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.polytech.films.model.Commentaire;
 import org.polytech.films.model.Film;
 import org.polytech.films.model.Film.Genre;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,7 @@ public class FilmRepository {
     //private final FilmService filmService;
     private Map<Long, Film> MaBaseDeFilms;
     private Long prochainId = 1L;
+    private Long prochainCommentaireId = 1L;
 
     public Map<Long, Film> getMaBaseDeFilms() {
         return MaBaseDeFilms;
@@ -67,7 +69,37 @@ public class FilmRepository {
             .toList();
     }
 
+    public List<Commentaire> getCommentaires(Long filmId) {
+        return MaBaseDeFilms.get(filmId).getCommentaires();
+    }
 
+    public Commentaire ajouterCommentaire(Long filmId, Commentaire commentaire) {
+        commentaire.setId(prochainCommentaireId++);
+        MaBaseDeFilms.get(filmId).getCommentaires().add(commentaire);
+        return commentaire;
+    }
+
+    public Commentaire mettreAJourCommentaire(Long commentaireId, Commentaire commentaire) {
+        for (Film film : MaBaseDeFilms.values()) {
+            List<Commentaire> commentaires = film.getCommentaires();
+            for (int i = 0; i < commentaires.size(); i++) {
+                if (commentaires.get(i).getId().equals(commentaireId)) {
+                    commentaire.setId(commentaireId);
+                    commentaires.set(i, commentaire);
+                    return commentaire;
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean supprimerCommentaire(Long commentaireId) {
+        for (Film film : MaBaseDeFilms.values()) {
+            boolean removed = film.getCommentaires().removeIf(c -> c.getId().equals(commentaireId));
+            if (removed) return true;
+        }
+        return false;
+    }
 
 
 
