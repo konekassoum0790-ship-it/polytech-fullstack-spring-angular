@@ -2,6 +2,7 @@ package org.polytech.films.repository;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.polytech.films.model.Film;
@@ -59,8 +60,15 @@ public class FilmRepository {
         MaBaseDeFilms.remove(id);
     }
 
+    public List<Film> rechercherFilms(String realisateur, Genre genre) {
+        return MaBaseDeFilms.values().stream()
+            .filter(f -> realisateur == null || f.getRealisateur().equals(realisateur))
+            .filter(f -> genre == null || f.getGenre() == genre)
+            .toList();
+    }
 
 
-    
-    
+
+
+
 }

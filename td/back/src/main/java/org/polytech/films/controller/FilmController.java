@@ -1,11 +1,10 @@
 package org.polytech.films.controller;
 
 import java.net.URI;
-import java.util.Map;
+import java.util.List;
 
 import org.polytech.films.model.Film;
 import org.polytech.films.service.FilmService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -30,8 +30,10 @@ public class FilmController {
 
 
     @GetMapping("/films")
-    public Map<Long,Film> ListeFilms(){
-        return filmService.RetournerListeFilm();
+    public List<Film> ListeFilms(
+        @RequestParam(required = false) String realisateur,
+        @RequestParam(required = false) Film.Genre genre){
+        return filmService.RetournerListeFilm(realisateur, genre);
     }
 
     @GetMapping("/films/{id}")

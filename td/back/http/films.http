@@ -2,6 +2,18 @@
 GET http://localhost:8080/films
 Accept: application/json
 
+### Filtrage par réalisateur
+GET http://localhost:8080/films?realisateur=Masashi Kishimoto
+Accept: application/json
+
+### Filtrage par genre
+GET http://localhost:8080/films?genre=ACTION
+Accept: application/json
+
+### Filtrage par réalisateur et genre
+GET http://localhost:8080/films?realisateur=Masashi Kishimoto&genre=ACTION
+Accept: application/json
+
 ### Film identifié par son identifiant
 GET http://localhost:8080/films/1
 Accept: application/json

@@ -1,5 +1,6 @@
 package org.polytech.films.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.polytech.films.exception.FilmNotFoundException;
@@ -18,8 +19,8 @@ public class FilmService {
     }
     
 
-    public Map<Long, Film > RetournerListeFilm(){
-        return filmRepository.getMaBaseDeFilms();
+    public List<Film> RetournerListeFilm(String realisateur, Film.Genre genre){
+        return filmRepository.rechercherFilms(realisateur, genre);
     }
 
     public Film RetourneFilmParId(Long id){
