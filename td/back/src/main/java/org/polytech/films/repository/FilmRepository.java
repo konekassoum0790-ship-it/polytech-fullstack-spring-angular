@@ -49,6 +49,12 @@ public class FilmRepository {
         return film;
     }
 
+    public Film mettreAJourUnFilm(Long id, Film film) {
+        film.setId(id);
+        MaBaseDeFilms.put(id, film);
+        return film;
+    }
+
 
 
     

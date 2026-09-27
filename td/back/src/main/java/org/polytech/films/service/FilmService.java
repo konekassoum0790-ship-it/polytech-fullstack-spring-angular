@@ -34,4 +34,9 @@ public class FilmService {
     public Film ajouterUnFilm(Film film) {
         return filmRepository.ajouterUnFilm(film);
     }
+
+    public Film mettreAJourUnFilm(Long id, Film film) {
+        RetourneFilmParId(id);
+        return filmRepository.mettreAJourUnFilm(id, film);
+    }
 }
