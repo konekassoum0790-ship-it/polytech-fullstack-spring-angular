@@ -4,20 +4,20 @@ import java.time.LocalDate;
 
 public class Film {
 
-    private long id;
+    private Long id;
     private String titre;
     private String realisateur;
     private LocalDate dateSortie;
-    public enum Genre {ACTION, DRAME, COMEDIE}
+    public enum Genre {ACTION, DRAME, COMEDIE, SCIENCE_FICTION}
     public Genre genre;
     
     public Film() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getTitre() {
@@ -46,7 +46,7 @@ public class Film {
     }
 
     //Constructeur avec initialisation
-    public Film(long id, String titre, String realisateur, LocalDate dateSortie, Genre genre) {
+    public Film(Long id, String titre, String realisateur, LocalDate dateSortie, Genre genre) {
         this.id = id;
         this.titre = titre;
         this.realisateur = realisateur;

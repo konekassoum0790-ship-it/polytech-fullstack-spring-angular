@@ -25,4 +25,9 @@ public class FilmService {
 
         return filmRepository.RetourneFilmParId(id);
     }
+
+
+    public Film ajouterUnFilm(Film film) {
+        return filmRepository.ajouterUnFilm(film);
+    }
 }

@@ -13,6 +13,7 @@ public class FilmRepository {
 
     //private final FilmService filmService;
     private Map<Long, Film> MaBaseDeFilms;
+    private Long prochainId = 1L;
 
     public Map<Long, Film> getMaBaseDeFilms() {
         return MaBaseDeFilms;
@@ -34,9 +35,18 @@ public class FilmRepository {
     //Constructeur
     public FilmRepository() {
 
-        Film film1 = new Film(1, "Naruto", "Masashi Kishimoto", LocalDate.of(1999, 9, 21), Genre.ACTION);
+        Film film1 = new Film(prochainId, "Naruto", "Masashi Kishimoto", LocalDate.of(1999, 9, 21), Genre.ACTION);
         MaBaseDeFilms = new HashMap<>();
         this.MaBaseDeFilms.put(film1.getId(), film1);
+    }
+
+
+
+    public Film ajouterUnFilm(Film film) {
+        prochainId++;
+        film.setId(prochainId);
+        this.MaBaseDeFilms.putIfAbsent(film.getId(), film);
+        return film;
     }
 
 

@@ -1,13 +1,18 @@
 package org.polytech.films.controller;
 
+import java.net.URI;
 import java.util.Map;
 
 import org.polytech.films.model.Film;
 import org.polytech.films.service.FilmService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController 
 public class FilmController {
@@ -28,6 +33,16 @@ public class FilmController {
     @GetMapping("/films/{id}")
     public Film RetourneFilmParId(@PathVariable Long id){
         return filmService.RetourneFilmParId(id);
+
+    }
+
+    @PostMapping("/films")
+    public ResponseEntity<Film>ajouterUnFilm(@RequestBody Film film){
+        Film saved = filmService.ajouterUnFilm(film);
+        URI uri = ServletUriComponentsBuilder
+            .fromCurrentRequest().path("/{id}")
+            .buildAndExpand(saved.getId()).toUri();
+        return ResponseEntity.created(uri).body(saved);
 
     }
 
