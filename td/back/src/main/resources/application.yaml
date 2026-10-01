@@ -1,0 +1,20 @@
+# application.yaml
+spring:
+  application:
+    name: films
+  mvc:
+    problemdetails:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/Filmdb
+    username: postgres
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    open-in-view: false
+  defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
