@@ -1,0 +1,52 @@
+### Liste des acteurs
+GET http://localhost:8080/acteurs
+Accept: application/json
+
+### Acteur identifié par son identifiant
+GET http://localhost:8080/acteurs/1
+Accept: application/json
+
+### Création d'un acteur — réponse attendue : 201 Created avec en-tête Location
+POST http://localhost:8080/acteurs
+Content-Type: application/json
+
+{
+  "nom": "Kishimoto",
+  "prenom": "Masashi"
+}
+
+### Mise à jour d'un acteur
+PUT http://localhost:8080/acteurs/1
+Content-Type: application/json
+
+{
+  "nom": "Kishimoto",
+  "prenom": "Masashi K."
+}
+
+### Suppression d'un acteur — réponse attendue : 204 No Content
+DELETE http://localhost:8080/acteurs/1
+
+### Identifiant inconnu — réponse attendue : 404 au format ProblemDetail
+GET http://localhost:8080/acteurs/9999
+Accept: application/json
+
+### Films joués par un acteur
+GET http://localhost:8080/acteurs/1/films
+Accept: application/json
+
+### Acteurs d'un film
+GET http://localhost:8080/films/1/acteurs
+Accept: application/json
+
+### Association d'un acteur a un film
+POST http://localhost:8080/films/1/acteurs/1
+
+### Dissociation d'un acteur d'un film — réponse attendue : 204 No Content
+DELETE http://localhost:8080/films/1/acteurs/1
+
+### Association sur un film inexistant — réponse attendue : 404 au format ProblemDetail
+POST http://localhost:8080/films/9999/acteurs/1
+
+### Association sur un acteur inexistant — réponse attendue : 404 au format ProblemDetail
+POST http://localhost:8080/films/1/acteurs/9999
