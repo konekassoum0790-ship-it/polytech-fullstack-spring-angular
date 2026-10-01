@@ -4,17 +4,27 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
-
+@Entity
 public class Film {
-
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank
+    @Column(nullable=false, length=200)
     private String titre;
     private String realisateur;
     private LocalDate dateSortie;
     public enum Genre {ACTION, DRAME, COMEDIE, SCIENCE_FICTION}
     public Genre genre;
+    @Transient 
     private List<Commentaire> commentaires = new ArrayList<>();
 
     public Film() {
@@ -56,15 +66,4 @@ public class Film {
     public void setCommentaires(List<Commentaire> commentaires) {
         this.commentaires = commentaires;
     }
-
-    //Constructeur avec initialisation
-    public Film(Long id, String titre, String realisateur, LocalDate dateSortie, Genre genre) {
-        this.id = id;
-        this.titre = titre;
-        this.realisateur = realisateur;
-        this.dateSortie = dateSortie;
-        this.genre = genre;
-    }
-
-    
 }
