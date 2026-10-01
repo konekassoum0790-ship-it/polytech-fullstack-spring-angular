@@ -2,18 +2,23 @@ package org.polytech.films.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 @Entity
 public class Film {
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -23,8 +28,14 @@ public class Film {
     private String realisateur;
     private LocalDate dateSortie;
     public Genre genre;
-    @Transient 
+    @Transient
     private List<Commentaire> commentaires = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "film_acteur",
+        joinColumns = @JoinColumn(name = "film_id"),
+        inverseJoinColumns = @JoinColumn(name = "acteur_id"))
+    private Set<Acteur> acteurs = new HashSet<>();
 
     public Film() {
     }
@@ -64,5 +75,11 @@ public class Film {
     }
     public void setCommentaires(List<Commentaire> commentaires) {
         this.commentaires = commentaires;
+    }
+    public Set<Acteur> getActeurs() {
+        return acteurs;
+    }
+    public void setActeurs(Set<Acteur> acteurs) {
+        this.acteurs = acteurs;
     }
 }
