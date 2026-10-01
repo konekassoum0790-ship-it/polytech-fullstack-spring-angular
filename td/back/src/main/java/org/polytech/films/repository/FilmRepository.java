@@ -17,5 +17,6 @@ public interface FilmRepository extends JpaRepository<Film, Long> {
         """)
     List<Film> rechercherFilms(@Param("realisateur") String realisateur, @Param("genre") Genre genre);
 
-    List<Film> findByActeursId(Long acteurId);
+    @Query("select f from Film f join f.acteurs a where a.id = :acteurId")
+    List<Film> findByActeursId(@Param("acteurId") Long acteurId);
 }
