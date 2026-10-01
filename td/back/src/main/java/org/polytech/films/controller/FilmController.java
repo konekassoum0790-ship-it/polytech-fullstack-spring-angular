@@ -3,7 +3,9 @@ package org.polytech.films.controller;
 import java.net.URI;
 import java.util.List;
 
-import org.polytech.films.model.Film;
+import org.polytech.films.dto.FilmCreationDto;
+import org.polytech.films.dto.FilmDto;
+import org.polytech.films.model.Genre;
 import org.polytech.films.service.FilmService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@RestController 
+@RestController
 public class FilmController {
 
     private final FilmService filmService;
@@ -30,31 +32,31 @@ public class FilmController {
 
 
     @GetMapping("/films")
-    public List<Film> ListeFilms(
+    public List<FilmDto> ListeFilms(
         @RequestParam(required = false) String realisateur,
-        @RequestParam(required = false) Film.Genre genre){
+        @RequestParam(required = false) Genre genre){
         return filmService.RetournerListeFilm(realisateur, genre);
     }
 
     @GetMapping("/films/{id}")
-    public Film RetourneFilmParId(@PathVariable Long id){
+    public FilmDto RetourneFilmParId(@PathVariable Long id){
         return filmService.RetourneFilmParId(id);
 
     }
 
     @PostMapping("/films")
-    public ResponseEntity<Film>ajouterUnFilm(@Valid @RequestBody Film film){
-        Film saved = filmService.ajouterUnFilm(film);
+    public ResponseEntity<FilmDto> ajouterUnFilm(@Valid @RequestBody FilmCreationDto filmCreationDto){
+        FilmDto saved = filmService.ajouterUnFilm(filmCreationDto);
         URI uri = ServletUriComponentsBuilder
             .fromCurrentRequest().path("/{id}")
-            .buildAndExpand(saved.getId()).toUri();
+            .buildAndExpand(saved.id()).toUri();
         return ResponseEntity.created(uri).body(saved);
 
     }
 
     @PutMapping("/films/{id}")
-    public Film mettreAJourUnFilm(@PathVariable Long id, @RequestBody Film film){
-        return filmService.mettreAJourUnFilm(id, film);
+    public FilmDto mettreAJourUnFilm(@PathVariable Long id, @RequestBody FilmCreationDto filmCreationDto){
+        return filmService.mettreAJourUnFilm(id, filmCreationDto);
     }
 
     @DeleteMapping("/films/{id}")

@@ -22,7 +22,6 @@ public class Film {
     private String titre;
     private String realisateur;
     private LocalDate dateSortie;
-    public enum Genre {ACTION, DRAME, COMEDIE, SCIENCE_FICTION}
     public Genre genre;
     @Transient 
     private List<Commentaire> commentaires = new ArrayList<>();

@@ -5,10 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.polytech.films.dto.FilmCreationDto;
+import org.polytech.films.dto.FilmDto;
+import org.polytech.films.dto.FilmMapper;
 import org.polytech.films.exception.CommentaireNotFoundException;
 import org.polytech.films.exception.FilmNotFoundException;
 import org.polytech.films.model.Commentaire;
 import org.polytech.films.model.Film;
+import org.polytech.films.model.Genre;
 import org.polytech.films.repository.FilmRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,45 +29,46 @@ public class FilmService {
     }
 
 
-    public List<Film> RetournerListeFilm(String realisateur, Film.Genre genre){
+    public List<FilmDto> RetournerListeFilm(String realisateur, Genre genre){
         return filmRepository.rechercherFilms(realisateur, genre).stream()
-            .map(this::attacherCommentaires)
+            .map(FilmMapper::toDto)
             .toList();
     }
 
-    public Film RetourneFilmParId(Long id){
-        Film film = filmRepository.findById(id)
+    public FilmDto RetourneFilmParId(Long id){
+        return FilmMapper.toDto(trouverFilmParId(id));
+    }
+
+    private Film trouverFilmParId(Long id) {
+        return filmRepository.findById(id)
             .orElseThrow(() -> new FilmNotFoundException(id));
-        return attacherCommentaires(film);
     }
 
 
-    public Film ajouterUnFilm(Film film) {
-        return filmRepository.save(film);
+    public FilmDto ajouterUnFilm(FilmCreationDto filmCreationDto) {
+        Film film = FilmMapper.toEntity(filmCreationDto);
+        return FilmMapper.toDto(filmRepository.save(film));
     }
 
-    public Film mettreAJourUnFilm(Long id, Film film) {
-        RetourneFilmParId(id);
+    public FilmDto mettreAJourUnFilm(Long id, FilmCreationDto filmCreationDto) {
+        trouverFilmParId(id);
+        Film film = FilmMapper.toEntity(filmCreationDto);
         film.setId(id);
-        return filmRepository.save(film);
+        return FilmMapper.toDto(filmRepository.save(film));
     }
 
     public void supprimerUnFilm(Long id) {
-        RetourneFilmParId(id);
+        trouverFilmParId(id);
         filmRepository.deleteById(id);
     }
 
-    private Film attacherCommentaires(Film film) {
-        film.setCommentaires(commentairesParFilm.getOrDefault(film.getId(), new ArrayList<>()));
-        return film;
-    }
-
     public List<Commentaire> getCommentaires(Long filmId) {
-        return RetourneFilmParId(filmId).getCommentaires();
+        trouverFilmParId(filmId);
+        return commentairesParFilm.getOrDefault(filmId, new ArrayList<>());
     }
 
     public Commentaire ajouterCommentaire(Long filmId, Commentaire commentaire) {
-        RetourneFilmParId(filmId);
+        trouverFilmParId(filmId);
         commentaire.setId(prochainCommentaireId++);
         commentairesParFilm.computeIfAbsent(filmId, id -> new ArrayList<>()).add(commentaire);
         return commentaire;
