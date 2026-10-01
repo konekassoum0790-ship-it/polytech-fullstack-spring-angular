@@ -26,9 +26,7 @@ public class FilmService {
 
 
     public List<Film> RetournerListeFilm(String realisateur, Film.Genre genre){
-        return filmRepository.findAll().stream()
-            .filter(f -> realisateur == null || f.getRealisateur().equals(realisateur))
-            .filter(f -> genre == null || f.getGenre() == genre)
+        return filmRepository.rechercherFilms(realisateur, genre).stream()
             .map(this::attacherCommentaires)
             .toList();
     }
