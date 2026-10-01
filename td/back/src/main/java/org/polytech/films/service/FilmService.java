@@ -5,27 +5,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.polytech.films.dto.ActeurDto;
+import org.polytech.films.dto.ActeurMapper;
 import org.polytech.films.dto.FilmCreationDto;
+import org.polytech.films.dto.FilmDetailDto;
 import org.polytech.films.dto.FilmDto;
 import org.polytech.films.dto.FilmMapper;
+import org.polytech.films.exception.ActeurNotFoundException;
 import org.polytech.films.exception.CommentaireNotFoundException;
 import org.polytech.films.exception.FilmNotFoundException;
+import org.polytech.films.model.Acteur;
 import org.polytech.films.model.Commentaire;
 import org.polytech.films.model.Film;
 import org.polytech.films.model.Genre;
+import org.polytech.films.repository.ActeurRepository;
 import org.polytech.films.repository.FilmRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class FilmService {
 
 
     private final FilmRepository filmRepository;
+    private final ActeurRepository acteurRepository;
     private final Map<Long, List<Commentaire>> commentairesParFilm = new HashMap<>();
     private Long prochainCommentaireId = 1L;
 
-    public FilmService(FilmRepository filmRepository) {
+    public FilmService(FilmRepository filmRepository, ActeurRepository acteurRepository) {
         this.filmRepository = filmRepository;
+        this.acteurRepository = acteurRepository;
     }
 
 
@@ -35,13 +45,39 @@ public class FilmService {
             .toList();
     }
 
-    public FilmDto RetourneFilmParId(Long id){
-        return FilmMapper.toDto(trouverFilmParId(id));
+    public FilmDetailDto RetourneFilmParId(Long id){
+        return FilmMapper.toDetailDto(trouverFilmParId(id));
     }
 
     private Film trouverFilmParId(Long id) {
         return filmRepository.findById(id)
             .orElseThrow(() -> new FilmNotFoundException(id));
+    }
+
+    private Acteur trouverActeurParId(Long id) {
+        return acteurRepository.findById(id)
+            .orElseThrow(() -> new ActeurNotFoundException(id));
+    }
+
+    public List<ActeurDto> getActeursDuFilm(Long filmId) {
+        return trouverFilmParId(filmId).getActeurs().stream()
+            .map(ActeurMapper::toDto)
+            .toList();
+    }
+
+    public FilmDetailDto ajouterActeurAuFilm(Long filmId, Long acteurId) {
+        Film film = trouverFilmParId(filmId);
+        Acteur acteur = trouverActeurParId(acteurId);
+        film.getActeurs().add(acteur);
+        filmRepository.save(film);
+        return FilmMapper.toDetailDto(film);
+    }
+
+    public void retirerActeurDuFilm(Long filmId, Long acteurId) {
+        Film film = trouverFilmParId(filmId);
+        Acteur acteur = trouverActeurParId(acteurId);
+        film.getActeurs().remove(acteur);
+        filmRepository.save(film);
     }
 
 

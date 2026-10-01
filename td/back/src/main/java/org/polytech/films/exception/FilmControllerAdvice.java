@@ -22,4 +22,11 @@ public class FilmControllerAdvice {
         problem.setTitle("Commentaire non trouvé");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem);
     }
+
+    @ExceptionHandler(ActeurNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleActeurNotFound(ActeurNotFoundException e) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+        problem.setTitle("Acteur non trouvé");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem);
+    }
 }

@@ -3,7 +3,9 @@ package org.polytech.films.controller;
 import java.net.URI;
 import java.util.List;
 
+import org.polytech.films.dto.ActeurDto;
 import org.polytech.films.dto.FilmCreationDto;
+import org.polytech.films.dto.FilmDetailDto;
 import org.polytech.films.dto.FilmDto;
 import org.polytech.films.model.Genre;
 import org.polytech.films.service.FilmService;
@@ -39,9 +41,25 @@ public class FilmController {
     }
 
     @GetMapping("/films/{id}")
-    public FilmDto RetourneFilmParId(@PathVariable Long id){
+    public FilmDetailDto RetourneFilmParId(@PathVariable Long id){
         return filmService.RetourneFilmParId(id);
 
+    }
+
+    @GetMapping("/films/{id}/acteurs")
+    public List<ActeurDto> getActeursDuFilm(@PathVariable Long id){
+        return filmService.getActeursDuFilm(id);
+    }
+
+    @PostMapping("/films/{id}/acteurs/{acteurId}")
+    public FilmDetailDto ajouterActeurAuFilm(@PathVariable Long id, @PathVariable Long acteurId){
+        return filmService.ajouterActeurAuFilm(id, acteurId);
+    }
+
+    @DeleteMapping("/films/{id}/acteurs/{acteurId}")
+    public ResponseEntity<Void> retirerActeurDuFilm(@PathVariable Long id, @PathVariable Long acteurId){
+        filmService.retirerActeurDuFilm(id, acteurId);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/films")
