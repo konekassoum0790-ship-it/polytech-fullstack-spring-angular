@@ -1,6 +1,9 @@
 package org.polytech.films.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.polytech.films.exception.CommentaireNotFoundException;
 import org.polytech.films.exception.FilmNotFoundException;
@@ -9,62 +12,84 @@ import org.polytech.films.model.Film;
 import org.polytech.films.repository.FilmRepository;
 import org.springframework.stereotype.Service;
 
-@Service 
+@Service
 public class FilmService {
 
 
     private final FilmRepository filmRepository;
+    private final Map<Long, List<Commentaire>> commentairesParFilm = new HashMap<>();
+    private Long prochainCommentaireId = 1L;
 
     public FilmService(FilmRepository filmRepository) {
         this.filmRepository = filmRepository;
     }
-    
+
 
     public List<Film> RetournerListeFilm(String realisateur, Film.Genre genre){
-        return filmRepository.rechercherFilms(realisateur, genre);
+        return filmRepository.findAll().stream()
+            .filter(f -> realisateur == null || f.getRealisateur().equals(realisateur))
+            .filter(f -> genre == null || f.getGenre() == genre)
+            .map(this::attacherCommentaires)
+            .toList();
     }
 
     public Film RetourneFilmParId(Long id){
-        Film film = filmRepository.RetourneFilmParId(id);
-        if (film == null) {
-            throw new FilmNotFoundException(id);
-        }
-        return film;
+        Film film = filmRepository.findById(id)
+            .orElseThrow(() -> new FilmNotFoundException(id));
+        return attacherCommentaires(film);
     }
 
 
     public Film ajouterUnFilm(Film film) {
-        return filmRepository.ajouterUnFilm(film);
+        return filmRepository.save(film);
     }
 
     public Film mettreAJourUnFilm(Long id, Film film) {
         RetourneFilmParId(id);
-        return filmRepository.mettreAJourUnFilm(id, film);
+        film.setId(id);
+        return filmRepository.save(film);
     }
 
     public void supprimerUnFilm(Long id) {
         RetourneFilmParId(id);
-        filmRepository.supprimerUnFilm(id);
+        filmRepository.deleteById(id);
+    }
+
+    private Film attacherCommentaires(Film film) {
+        film.setCommentaires(commentairesParFilm.getOrDefault(film.getId(), new ArrayList<>()));
+        return film;
     }
 
     public List<Commentaire> getCommentaires(Long filmId) {
-        RetourneFilmParId(filmId);
-        return filmRepository.getCommentaires(filmId);
+        return RetourneFilmParId(filmId).getCommentaires();
     }
 
     public Commentaire ajouterCommentaire(Long filmId, Commentaire commentaire) {
         RetourneFilmParId(filmId);
-        return filmRepository.ajouterCommentaire(filmId, commentaire);
+        commentaire.setId(prochainCommentaireId++);
+        commentairesParFilm.computeIfAbsent(filmId, id -> new ArrayList<>()).add(commentaire);
+        return commentaire;
     }
 
     public Commentaire mettreAJourCommentaire(Long commentaireId, Commentaire commentaire) {
-        Commentaire result = filmRepository.mettreAJourCommentaire(commentaireId, commentaire);
-        if (result == null) throw new CommentaireNotFoundException(commentaireId);
-        return result;
+        for (List<Commentaire> commentaires : commentairesParFilm.values()) {
+            for (int i = 0; i < commentaires.size(); i++) {
+                if (commentaires.get(i).getId().equals(commentaireId)) {
+                    commentaire.setId(commentaireId);
+                    commentaires.set(i, commentaire);
+                    return commentaire;
+                }
+            }
+        }
+        throw new CommentaireNotFoundException(commentaireId);
     }
 
     public void supprimerCommentaire(Long commentaireId) {
-        boolean removed = filmRepository.supprimerCommentaire(commentaireId);
-        if (!removed) throw new CommentaireNotFoundException(commentaireId);
+        for (List<Commentaire> commentaires : commentairesParFilm.values()) {
+            if (commentaires.removeIf(c -> c.getId().equals(commentaireId))) {
+                return;
+            }
+        }
+        throw new CommentaireNotFoundException(commentaireId);
     }
 }
