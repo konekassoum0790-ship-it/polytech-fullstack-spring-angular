@@ -16,4 +16,6 @@ public interface FilmRepository extends JpaRepository<Film, Long> {
           and (:genre is null or f.genre = :genre)
         """)
     List<Film> rechercherFilms(@Param("realisateur") String realisateur, @Param("genre") Genre genre);
+
+    List<Film> findByActeursId(Long acteurId);
 }

@@ -60,7 +60,8 @@ public class FilmService {
     }
 
     public List<ActeurDto> getActeursDuFilm(Long filmId) {
-        return trouverFilmParId(filmId).getActeurs().stream()
+        trouverFilmParId(filmId);
+        return acteurRepository.findByFilmsId(filmId).stream()
             .map(ActeurMapper::toDto)
             .toList();
     }
